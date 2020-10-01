@@ -1,13 +1,20 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header 
+      :numCorrect="numCorrect"
+      :numTotal="numTotal"
+    >
+    </Header>
+
     <b-container class="bv-example-row">
       <b-row>
         <b-col sm="6" offset="3">
           <QuestionBox
             v-if="questions.length"
             :currentQuestion="questions[index]"
-            :next="Next">
+            :next="Next"
+            :disableNext="nextIsDisabled"
+            :increment="increment">
           </QuestionBox>
         </b-col>
       </b-row>
@@ -28,12 +35,25 @@ export default {
   data() {
     return {
       questions: [],
-      index: 0
+      index: 0,
+      nextIsDisabled: false,
+      numCorrect: 0,
+      numTotal: 0
     }
   },
   methods: {
     Next() {
-      this.index++;
+      if (this.index < 10 - 1)
+      {
+        this.index++;
+        this.nextIsDisabled = this.index >= 10 - 1;
+      }
+    },
+    increment(isCorrect) {
+      if (isCorrect) {
+        this.numCorrect++;
+      }
+      this.numTotal++
     }
   },
   mounted() {
